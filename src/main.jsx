@@ -54,8 +54,6 @@ import supabase from "./supabaseClient"
         </button>
       </div>
     )
-  }
-
   return (
     <div>
       <h1>Welcome {session.user.email}</h1>
@@ -66,4 +64,4 @@ import supabase from "./supabaseClient"
       </button>
     </div>
   )
-
+  }

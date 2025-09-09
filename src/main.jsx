@@ -1,65 +1,101 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import './styles.css'
-import App from './App'
-import Expenses from './pages/Expenses'
-import Planning from './pages/Planning'
-import Safety from './pages/Safety'
-import Photos from './pages/Photos'
-import Logs from './pages/Logs'
-
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <App />,
-    children: [
-      { index: true, element: <Expenses /> },
-      { path: 'expenses', element: <Expenses /> },
-      { path: 'planning', element: <Planning /> },
-      { path: 'safety', element: <Safety /> },
-      { path: 'photos', element: <Photos /> },
-      { path: 'logs', element: <Logs /> },
-    ]
-  }
-])
-
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
-)
-import { useEffect, useState } from "react"
+import { Outlet, NavLink } from "react-router-dom"
+import { Plane } from "lucide-react"
+import { useState, useEffect } from "react"
 import supabase from "./supabaseClient"
 
+export default function App() {
+  const [dark, setDark] = useState(false)
+  const [session, setSession] = useState(null)
+
+  // ✅ Check session on load + listen for changes
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
     })
 
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log("Auth event:", _event, session)
       setSession(session)
     })
 
     return () => listener.subscription.unsubscribe()
   }, [])
 
+  // ✅ Login handler
+  async function signInWithGoogle() {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+    })
+    if (error) console.error("Login error:", error.message)
+  }
+
+  // ✅ Logout handler
+  async function signOut() {
+    const { error } = await supabase.auth.signOut()
+    if (error) console.error("Logout error:", error.message)
+  }
+
+  // ✅ If not logged in → show login page
   if (!session) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <button>
-          (onClick={() => supabase.auth.signInWithOAuth({ provider: "google" })})
-          className="bg-red-500 text-white px-4 py-2 rounded">
+      <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white">
+        <h1 className="text-3xl font-bold mb-6 flex items-center gap-2">
+          <Plane /> TripMate
+        </h1>
+        <button
+          onClick={signInWithGoogle}
+          className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl shadow-lg transition"
+        >
           Login with Google
         </button>
       </div>
-    <div>
-      <h1>Welcome {session.user.email}</h1>
-      <button 
-        onClick={() => supabase.auth.signOut()} 
-        className="bg-gray-700 text-white px-4 py-2 rounded">
-        Logout
-      </button>
+    )
+  }
+
+  // ✅ If logged in → show app layout
+  return (
+    <div className={dark ? "dark bg-gray-900 text-white min-h-screen" : "bg-gray-100 min-h-screen"}>
+      {/* Header */}
+      <header className="flex items-center justify-between p-4 bg-indigo-600 text-white shadow-md">
+        <h1 className="text-xl font-bold flex items-center gap-2">
+          <Plane /> TripMate
+        </h1>
+
+        {/* Navigation */}
+        <nav className="flex gap-4">
+          <NavLink to="/expenses" className="hover:text-yellow-300">Expenses</NavLink>
+          <NavLink to="/planning" className="hover:text-yellow-300">Planning</NavLink>
+          <NavLink to="/safety" className="hover:text-yellow-300">Safety</NavLink>
+          <NavLink to="/photos" className="hover:text-yellow-300">Photos</NavLink>
+          <NavLink to="/logs" className="hover:text-yellow-300">Logs</NavLink>
+        </nav>
+
+        {/* Right Side: Theme + Logout */}
+        <div className="flex items-center gap-4">
+          <button 
+            className="bg-black px-3 py-1 rounded-lg"
+            onClick={() => setDark(!dark)}
+          >
+            Toggle Theme
+          </button>
+          <button
+            onClick={signOut}
+            className="bg-red-500 px-3 py-1 rounded-lg"
+          >
+            Logout
+          </button>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="p-6">
+        <Outlet />
+      </main>
+
+      {/* Footer */}
+      <footer className="p-4 text-center bg-gray-200 text-gray-600">
+        © 2025 TripMate
+      </footer>
     </div>
   )
-  }
+}

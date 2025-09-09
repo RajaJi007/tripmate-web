@@ -7,7 +7,6 @@ import Planning from "./pages/Planning"
 import Safety from "./pages/Safety"
 import Photos from "./pages/Photos"
 import Logs from "./pages/Logs"
-import "./index.css"
 
 const router = createBrowserRouter([
   {

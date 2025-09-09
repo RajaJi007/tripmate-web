@@ -32,8 +32,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 import { useEffect, useState } from "react"
 import supabase from "./supabaseClient"
 
-export default function App() {
-  const [session, setSession] = useState(null)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {

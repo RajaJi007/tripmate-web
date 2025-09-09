@@ -83,4 +83,3 @@ export default function App() {
         © 2025 TripMate
       </footer>
     </div>
-  )

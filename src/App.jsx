@@ -1,75 +1,13 @@
-import { Outlet, NavLink } from 'react-router-dom'
-import { Plane, Wallet, Users, Camera, AlertTriangle, BookText } from 'lucide-react'
-
-const NavItem = ({ to, icon: Icon, label }) => (
-  <NavLink
-    to={to}
-    className={({ isActive }) =>
-      `flex items-center gap-2 px-3 py-2 rounded-xl text-sm transition
-       ${isActive ? 'bg-black text-white' : 'bg-white hover:bg-gray-100 text-gray-700'}`
-    }
-  >
-    <Icon size={16} />
-    <span>{label}</span>
-  </NavLink>
-)
-
-export default function App() {
-  return (
-    <div className="min-h-screen">
-      <header className="border-b bg-white">
-        <div className="container flex items-center justify-between py-3">
-          <div className="flex items-center gap-2 font-semibold">
-            <Plane /> TripMate
-          </div>
-          <nav className="flex gap-2">
-            <NavItem to="/expenses" icon={Wallet} label="Expenses" />
-            <NavItem to="/planning" icon={Users} label="Planning" />
-            <NavItem to="/safety" icon={AlertTriangle} label="Safety" />
-            <NavItem to="/photos" icon={Camera} label="Photos" />
-            <NavItem to="/logs" icon={BookText} label="Logs" />
-          </nav>
-        </div>
-      </header>
-
-      <main className="container py-6">
-        <Outlet />
-      </main>
-
-      <footer className="border-t bg-white">
-        <div className="container py-4 text-xs text-gray-500">
-          © {new Date().getFullYear()} TripMate • MVP demo
-        </div>
-      </footer>
-    </div>
-  )
-}
+import { Outlet, NavLink } from "react-router-dom"
+import { Plane } from "lucide-react"
+import { useState, useEffect } from "react"
 import supabase from "./supabaseClient"
 
 export default function App() {
-  async function signInWithGoogle() {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-    })
-    if (error) console.error(error)
-  }
-
-  return (
-    <div>
-      <button 
-        onClick={signInWithGoogle} 
-        className="bg-red-500 text-white px-4 py-2 rounded">
-        Login with Google
-      </button>
-    </div>
-  )
-}
-import { useEffect, useState } from "react"
-import supabase from "./supabaseClient"
-
-export default function App() {
+  const [dark, setDark] = useState(false)
   const [session, setSession] = useState(null)
 
+  // ✅ Listen for login/logout
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
@@ -82,26 +20,67 @@ export default function App() {
     return () => listener.subscription.unsubscribe()
   }, [])
 
+  // ✅ If user not logged in → show login screen
   if (!session) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <button 
-          onClick={() => supabase.auth.signInWithOAuth({ provider: "google" })} 
-          className="bg-red-500 text-white px-4 py-2 rounded">
+      <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white">
+        <h1 className="text-3xl font-bold mb-6 flex items-center gap-2">
+          <Plane /> TripMate
+        </h1>
+        <button
+          onClick={() => supabase.auth.signInWithOAuth({ provider: "google" })}
+          className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl shadow-lg transition"
+        >
           Login with Google
         </button>
       </div>
     )
   }
 
+  // ✅ If logged in → show main app
   return (
-    <div>
-      <h1>Welcome {session.user.email}</h1>
-      <button 
-        onClick={() => supabase.auth.signOut()} 
-        className="bg-gray-700 text-white px-4 py-2 rounded">
-        Logout
-      </button>
+    <div className={dark ? "dark bg-gray-900 text-white min-h-screen" : "bg-gray-100 min-h-screen"}>
+      {/* Header */}
+      <header className="flex items-center justify-between p-4 bg-gray-800 text-white">
+        <h1 className="text-xl font-bold flex items-center gap-2">
+          <Plane /> TripMate
+        </h1>
+
+        {/* Navigation */}
+        <nav className="flex gap-4">
+          <NavLink to="/expenses" className="hover:underline">Expenses</NavLink>
+          <NavLink to="/planning" className="hover:underline">Planning</NavLink>
+          <NavLink to="/safety" className="hover:underline">Safety</NavLink>
+          <NavLink to="/photos" className="hover:underline">Photos</NavLink>
+          <NavLink to="/logs" className="hover:underline">Logs</NavLink>
+        </nav>
+
+        {/* Right Side: Theme + User */}
+        <div className="flex items-center gap-4">
+          <button 
+            className="bg-black px-3 py-1 rounded-lg"
+            onClick={() => setDark(!dark)}
+          >
+            Toggle Theme
+          </button>
+          <button
+            onClick={() => supabase.auth.signOut()}
+            className="bg-red-500 px-3 py-1 rounded-lg"
+          >
+            Logout
+          </button>
+        </div>
+      </header>
+
+      {/* Page Content */}
+      <main className="p-6">
+        <Outlet />
+      </main>
+
+      {/* Footer */}
+      <footer className="p-4 text-center text-gray-500">
+        © 2025 TripMate
+      </footer>
     </div>
   )
 }

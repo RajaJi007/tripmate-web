@@ -7,20 +7,21 @@ export default function App() {
   const [dark, setDark] = useState(false)
   const [session, setSession] = useState(null)
 
-  // ✅ Listen for login/logout
+  // Listen for login/logout state
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
     })
 
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log("Auth event:", _event, session)
       setSession(session)
     })
 
     return () => listener.subscription.unsubscribe()
   }, [])
 
-  // ✅ If user not logged in → show login screen
+  // If user not logged in → show login screen
   if (!session) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white">
@@ -37,25 +38,25 @@ export default function App() {
     )
   }
 
-  // ✅ If logged in → show main app
+  // If logged in → show full app
   return (
     <div className={dark ? "dark bg-gray-900 text-white min-h-screen" : "bg-gray-100 min-h-screen"}>
       {/* Header */}
-      <header className="flex items-center justify-between p-4 bg-gray-800 text-white">
+      <header className="flex items-center justify-between p-4 bg-indigo-600 text-white shadow-md">
         <h1 className="text-xl font-bold flex items-center gap-2">
           <Plane /> TripMate
         </h1>
 
         {/* Navigation */}
         <nav className="flex gap-4">
-          <NavLink to="/expenses" className="hover:underline">Expenses</NavLink>
-          <NavLink to="/planning" className="hover:underline">Planning</NavLink>
-          <NavLink to="/safety" className="hover:underline">Safety</NavLink>
-          <NavLink to="/photos" className="hover:underline">Photos</NavLink>
-          <NavLink to="/logs" className="hover:underline">Logs</NavLink>
+          <NavLink to="/expenses" className="hover:text-yellow-300">Expenses</NavLink>
+          <NavLink to="/planning" className="hover:text-yellow-300">Planning</NavLink>
+          <NavLink to="/safety" className="hover:text-yellow-300">Safety</NavLink>
+          <NavLink to="/photos" className="hover:text-yellow-300">Photos</NavLink>
+          <NavLink to="/logs" className="hover:text-yellow-300">Logs</NavLink>
         </nav>
 
-        {/* Right Side: Theme + User */}
+        {/* Theme Toggle + Logout */}
         <div className="flex items-center gap-4">
           <button 
             className="bg-black px-3 py-1 rounded-lg"
@@ -78,7 +79,7 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <footer className="p-4 text-center text-gray-500">
+      <footer className="p-4 text-center bg-gray-200 text-gray-600">
         © 2025 TripMate
       </footer>
     </div>

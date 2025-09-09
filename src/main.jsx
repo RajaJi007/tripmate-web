@@ -66,4 +66,4 @@ import supabase from "./supabaseClient"
       </button>
     </div>
   )
-}
+

@@ -60,7 +60,7 @@ import supabase from "./supabaseClient"
   return (
     <div>
       <h1>Welcome {session.user.email}</h1>
-      <button 
+      <button> 
         onClick={() => supabase.auth.signOut()} 
         className="bg-gray-700 text-white px-4 py-2 rounded">
         Logout

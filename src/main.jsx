@@ -53,8 +53,6 @@ import supabase from "./supabaseClient"
           Login with Google
         </button>
       </div>
-    )
-  return (
     <div>
       <h1>Welcome {session.user.email}</h1>
       <button 

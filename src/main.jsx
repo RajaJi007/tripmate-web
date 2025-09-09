@@ -47,8 +47,8 @@ import supabase from "./supabaseClient"
   if (!session) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <button 
-          )onClick={() => supabase.auth.signInWithOAuth({ provider: "google" })}
+        <button>
+          onClick={() => supabase.auth.signInWithOAuth({ provider: "google" })}
           className="bg-red-500 text-white px-4 py-2 rounded">
           Login with Google
         </button>

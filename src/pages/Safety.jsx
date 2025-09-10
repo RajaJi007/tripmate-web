@@ -8,6 +8,12 @@ export default function Safety() {
   const [weather, setWeather] = useState(null)
   const [loading, setLoading] = useState(false)
 
+  // Add to all components
+const [loading, setLoading] = useState(false)
+const [error, setError] = useState(null)
+
+if (error) return <div className="text-red-500">Error: {error}</div>
+if (loading) return <div>Loading...</div>
   const rules = {
     Manali: ['Carry warm clothing', 'Check road conditions', 'Respect local customs'],
     Goa: ['Follow beach safety flags', 'Avoid unlicensed rentals', 'Respect noise rules'],

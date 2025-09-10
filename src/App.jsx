@@ -10,11 +10,7 @@ export default function App() {
       setSession(session)
     })
 // Add to all components
-const [loading, setLoading] = useState(false)
-const [error, setError] = useState(null)
 
-if (error) return <div className="text-red-500">Error: {error}</div>
-if (loading) return <div>Loading...</div>
   // Add this useEffect to handle auth callback
 useEffect(() => {
   const { data: authListener } = supabase.auth.onAuthStateChange(

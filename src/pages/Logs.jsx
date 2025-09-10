@@ -7,7 +7,12 @@ export default function Logs() {
   const [items, setItems] = useState(() => db.get('logs', []))
 
   useEffect(() => db.set('logs', items), [items])
+  // Add to all components
+const [loading, setLoading] = useState(false)
+const [error, setError] = useState(null)
 
+if (error) return <div className="text-red-500">Error: {error}</div>
+if (loading) return <div>Loading...</div>
   const getLocation = () => {
     if (!navigator.geolocation) return alert('Geolocation not supported')
     navigator.geolocation.getCurrentPosition(

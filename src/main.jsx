@@ -9,9 +9,7 @@ import Safety from './pages/Safety'
 import Photos from './pages/Photos'
 import Logs from './pages/Logs'
 
-// Add to all components
-const [loading, setLoading] = useState(false)
-const [error, setError] = useState(null)
+
 
 
 const router = createBrowserRouter([

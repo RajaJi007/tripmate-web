@@ -13,8 +13,10 @@ import Logs from './pages/Logs'
 const [loading, setLoading] = useState(false)
 const [error, setError] = useState(null)
 
-if (error) return <div className="text-red-500">Error: {error}</div>
-if (loading) return <div>Loading...</div>
+if (error) 
+  return <div className="text-red-500">Error: {error}</div>
+if (loading)
+  return <div>Loading...</div>
 const router = createBrowserRouter([
   {
     path: '/',

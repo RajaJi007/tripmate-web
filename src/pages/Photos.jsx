@@ -20,6 +20,15 @@ if (loading) return <div>Loading...</div>
     )
   }
 
+  const uploadPhoto = async (file) => {
+  const { data, error } = await supabase.storage
+    .from('photos')
+    .upload(`${session.user.id}/${Date.now()}.jpg`, file)
+  
+  if (!error) {
+    // Store the path in your database instead of base64
+  }
+}
   const onFile = async (e) => {
     const file = e.target.files?.[0]
     if (!file) return

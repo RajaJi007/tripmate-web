@@ -35,7 +35,12 @@ const saveExpense = async (expense) => {
     }
     return Object.values(map)
   }, [items])
+  // Add to all components
+const [loading, setLoading] = useState(false)
+const [error, setError] = useState(null)
 
+if (error) return <div className="text-red-500">Error: {error}</div>
+if (loading) return <div>Loading...</div>
   const totalPlanned = data.reduce((a, b) => a + b.planned, 0)
   const totalActual = data.reduce((a, b) => a + b.actual, 0)
   const delta = totalActual - totalPlanned

@@ -10,6 +10,21 @@ export default function App() {
       setSession(session)
     })
 
+  // Add this useEffect to handle auth callback
+useEffect(() => {
+  const { data: authListener } = supabase.auth.onAuthStateChange(
+    (event, session) => {
+      if (event === 'SIGNED_IN') {
+        setSession(session)
+      }
+      if (event === 'SIGNED_OUT') {
+        setSession(null)
+      }
+    }
+  )
+  
+  return () => authListener.subscription.unsubscribe()
+}, [])
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
     })

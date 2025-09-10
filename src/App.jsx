@@ -40,6 +40,20 @@ useEffect(() => {
           className="bg-red-500 text-white px-4 py-2 rounded">
           Login with Google
         </button>
+        // Add to App.jsx after login
+<nav className="bg-white border-b p-4 mb-6">
+  <div className="flex items-center justify-between">
+    <h1 className="text-xl font-bold">TripMate</h1>
+    <div className="flex gap-4">
+      <NavLink to="/expenses" className="hover:text-blue-600">Expenses</NavLink>
+      <NavLink to="/planning" className="hover:text-blue-600">Planning</NavLink>
+      <NavLink to="/safety" className="hover:text-blue-600">Safety</NavLink>
+      <NavLink to="/photos" className="hover:text-blue-600">Photos</NavLink>
+      <NavLink to="/logs" className="hover:text-blue-600">Logs</NavLink>
+    </div>
+    <button onClick={() => supabase.auth.signOut()}>Logout</button>
+  </div>
+</nav>
       </div>
     )
   }

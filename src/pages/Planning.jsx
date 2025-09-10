@@ -10,6 +10,12 @@ export default function Planning() {
   useEffect(() => db.set('members', members), [members])
   useEffect(() => db.set('destinations', destinations), [destinations])
 
+  // Add to all components
+const [loading, setLoading] = useState(false)
+const [error, setError] = useState(null)
+
+if (error) return <div className="text-red-500">Error: {error}</div>
+if (loading) return <div>Loading...</div>
   const addMember = (e) => {
     e.preventDefault()
     if (!memberName) return

@@ -16,7 +16,15 @@ export default function Expenses() {
     setItems(prev => [...prev, { id: uid(), planned: Number(planned), actual: Number(actual), category }])
     setPlanned(''); setActual('')
   }
-
+  // Example for Expenses.jsx
+const saveExpense = async (expense) => {
+  const { error } = await supabase
+    .from('expenses')
+    .insert([{ ...expense, user_id: session.user.id }])
+  
+  if (error) console.error('Error:', error)
+  else fetchExpenses() // Refresh data
+}
   const data = useMemo(() => {
     // aggregate by category
     const map = {}

@@ -9,6 +9,12 @@ import Safety from './pages/Safety'
 import Photos from './pages/Photos'
 import Logs from './pages/Logs'
 
+// Add to all components
+const [loading, setLoading] = useState(false)
+const [error, setError] = useState(null)
+
+if (error) return <div className="text-red-500">Error: {error}</div>
+if (loading) return <div>Loading...</div>
 const router = createBrowserRouter([
   {
     path: '/',
